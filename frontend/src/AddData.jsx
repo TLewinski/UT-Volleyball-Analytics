@@ -4,7 +4,7 @@ import axios from "axios";
 import { API } from "./utils";
 
 // Shared Tailwind classes so every input looks the same
-const inputClass = "bg-slate-700 rounded-lg p-2 w-full";
+const inputClass = "bg-navy-800 rounded-lg p-2 w-full";
 
 // Blank versions of each form, used to start and to reset after saving
 const emptyMatch = {
@@ -99,8 +99,8 @@ function AddData() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 p-8">
-      <Link to="/" className="text-emerald-400 hover:underline">
+    <div className="min-h-screen bg-navy-950 text-slate-100 p-8">
+      <Link to="/" className="text-gold-400 hover:underline">
         ← Back to team
       </Link>
 
@@ -108,7 +108,7 @@ function AddData() {
 
       <div className="flex flex-wrap gap-8">
         {/* ---------- Form 1: add a match ---------- */}
-        <form onSubmit={submitMatch} className="bg-slate-800 rounded-xl p-6 shadow-lg flex-1 min-w-[300px] flex flex-col gap-4">
+        <form onSubmit={submitMatch} className="bg-navy-900 rounded-xl p-6 shadow-lg flex-1 min-w-[300px] flex flex-col gap-4">
           <h2 className="text-xl font-bold">New Match</h2>
 
           <label>
@@ -146,14 +146,14 @@ function AddData() {
             </label>
           </div>
 
-          <button className="bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold py-2 rounded-lg">
+          <button className="bg-gold-500 hover:bg-gold-400 text-navy-950 font-bold py-2 rounded-lg">
             Save Match
           </button>
           <p>{matchMessage}</p>
         </form>
 
         {/* ---------- Form 2: add a player's stats for a match ---------- */}
-        <form onSubmit={submitStats} className="bg-slate-800 rounded-xl p-6 shadow-lg flex-1 min-w-[300px] flex flex-col gap-4">
+        <form onSubmit={submitStats} className="bg-navy-900 rounded-xl p-6 shadow-lg flex-1 min-w-[300px] flex flex-col gap-4">
           <h2 className="text-xl font-bold">Player Stats</h2>
 
           <label>
@@ -190,7 +190,7 @@ function AddData() {
             ))}
           </div>
 
-          <button className="bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold py-2 rounded-lg">
+          <button className="bg-gold-500 hover:bg-gold-400 text-navy-950 font-bold py-2 rounded-lg">
             Save Stats
           </button>
           <p>{statsMessage}</p>

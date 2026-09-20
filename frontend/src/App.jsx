@@ -8,9 +8,9 @@ import { API, formatPct, formatDate } from "./utils";
 // Reusable card — used for each number at the top of the page
 function StatCard({ label, value }) {
   return (
-    <div className="bg-slate-800 rounded-xl p-6 shadow-lg flex-1 min-w-[140px]">
+    <div className="bg-navy-900 rounded-xl p-6 shadow-lg flex-1 min-w-[140px]">
       <h3 className="text-sm uppercase tracking-wide text-slate-400">{label}</h3>
-      <p className="text-4xl font-bold text-emerald-400 mt-2">{value}</p>
+      <p className="text-4xl font-bold text-gold-400 mt-2">{value}</p>
     </div>
   );
 }
@@ -56,28 +56,28 @@ function Home() {
 
   if (loading)
     return (
-      <div className="min-h-screen bg-slate-900 text-slate-400 flex items-center justify-center">
+      <div className="min-h-screen bg-navy-950 text-slate-400 flex items-center justify-center">
         Loading season stats…
       </div>
     );
 
   if (error)
     return (
-      <div className="min-h-screen bg-slate-900 text-red-400 flex items-center justify-center">
+      <div className="min-h-screen bg-navy-950 text-red-400 flex items-center justify-center">
         {error}
       </div>
     );
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 p-8">
+    <div className="min-h-screen bg-navy-950 text-slate-100 p-8">
       {/* Title and a link to the data entry page */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">
-          UT Volleyball <span className="text-emerald-400">Analytics</span>
+          UT Volleyball <span className="text-gold-400">Analytics</span>
         </h1>
         <Link
           to="/add"
-          className="bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold px-4 py-2 rounded-lg"
+          className="bg-gold-500 hover:bg-gold-400 text-navy-950 font-bold px-4 py-2 rounded-lg"
         >
           + Add Data
         </Link>
@@ -95,16 +95,16 @@ function Home() {
       <h2 className="text-xl font-bold mb-4">Player Season Totals</h2>
 
       <div className="overflow-x-auto mb-10">
-        <table className="w-full bg-slate-800 rounded-xl overflow-hidden shadow-lg">
+        <table className="w-full bg-navy-900 rounded-xl overflow-hidden shadow-lg">
           <thead>
-            <tr className="bg-slate-700 text-left text-sm uppercase tracking-wide text-slate-300">
+            <tr className="bg-navy-800 text-left text-sm uppercase tracking-wide text-slate-300">
               <th className="p-4">Player</th>
               {columns.map((field) => (
                 <th
                   key={field}
                   onClick={() => setSortField(field)}
-                  className={`p-4 cursor-pointer capitalize hover:text-emerald-300 ${
-                    sortField === field ? "text-emerald-400" : ""
+                  className={`p-4 cursor-pointer capitalize hover:text-gold-300 ${
+                    sortField === field ? "text-gold-400" : ""
                   }`}
                 >
                   {columnLabel(field)}
@@ -116,12 +116,12 @@ function Home() {
             {sortedTotals.map((player) => (
               <tr
                 key={player.player_id}
-                className="border-t border-slate-700 hover:bg-slate-700/50"
+                className="border-t border-navy-800 hover:bg-navy-700/50"
               >
                 <td className="p-4">
                   <Link
                     to={`/player/${player.player_id}`}
-                    className="text-emerald-400 hover:underline"
+                    className="text-gold-400 hover:underline"
                   >
                     {player.first_name} {player.last_name}
                   </Link>
@@ -145,7 +145,7 @@ function Home() {
         {matches.map((match) => (
           <div
             key={match.match_id}
-            className="bg-slate-800 rounded-lg p-4 flex justify-between items-center"
+            className="bg-navy-900 rounded-lg p-4 flex justify-between items-center"
           >
             <div>
               <p className="font-bold">vs {match.opponent}</p>

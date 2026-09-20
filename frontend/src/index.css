@@ -1,1 +1,17 @@
 @import "tailwindcss";
+
+/*
+  UT school colors — change them here and the whole site updates.
+  navy = backgrounds, gold = highlights.
+  (Green and red are still used for wins and losses.)
+*/
+@theme {
+  --color-navy-950: #0a1a33; /* page background */
+  --color-navy-900: #10264a; /* cards and tables */
+  --color-navy-800: #1b3561; /* table headers, borders, inputs */
+  --color-navy-700: #274778; /* hover */
+
+  --color-gold-300: #ffe07a; /* hover on gold text */
+  --color-gold-400: #ffcb2f; /* main gold */
+  --color-gold-500: #f2b705; /* buttons */
+}
