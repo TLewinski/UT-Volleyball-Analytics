@@ -4,7 +4,8 @@
   "description": "REST API for UT Volleyball Analytics",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "seed": "node seed.js"
   },
   "keywords": [],
   "author": "",
