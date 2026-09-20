@@ -31,17 +31,22 @@ router.get("/", (req, res) => {
 });
 
 // Team totals for the dashboard cards, including team hitting %
+// Add ?team=1 to limit it to one team
 router.get("/summary", (req, res) => {
+  // Joining players lets us filter these totals by team
   const sql = `
     SELECT
-      SUM(kills) AS total_kills,
-      SUM(aces) AS total_aces,
-      SUM(blocks) AS total_blocks,
-      ROUND((SUM(kills) - SUM(errors)) / NULLIF(SUM(attempts), 0), 3) AS hitting_pct
-    FROM player_stats
+      SUM(ps.kills) AS total_kills,
+      SUM(ps.aces) AS total_aces,
+      SUM(ps.blocks) AS total_blocks,
+      ROUND((SUM(ps.kills) - SUM(ps.errors)) / NULLIF(SUM(ps.attempts), 0), 3) AS hitting_pct
+    FROM player_stats ps
+    JOIN players p ON ps.player_id = p.player_id
+    WHERE (? IS NULL OR p.team_id = ?)
   `;
+  const team = req.query.team || null;
 
-  db.query(sql, (err, results) => {
+  db.query(sql, [team, team], (err, results) => {
     if (err) return res.status(500).json({ error: "Could not load summary" });
     res.json(results[0]);
   });

@@ -14,18 +14,29 @@ USE volleyball_analytics;
 DROP TABLE IF EXISTS player_stats;
 DROP TABLE IF EXISTS matches;
 DROP TABLE IF EXISTS players;
+DROP TABLE IF EXISTS teams;
+
+-- The club's teams (for example an A team and a B team)
+CREATE TABLE teams (
+  team_id INT AUTO_INCREMENT PRIMARY KEY,
+  name    VARCHAR(50) NOT NULL
+);
 
 -- One row per player on the team
 CREATE TABLE players (
   player_id  INT AUTO_INCREMENT PRIMARY KEY,
+  team_id    INT NOT NULL,
   first_name VARCHAR(50) NOT NULL,
   last_name  VARCHAR(50) NOT NULL,
-  position   VARCHAR(50)            -- e.g. 'Outside Hitter', 'Libero'
+  position   VARCHAR(50),           -- e.g. 'Outside Hitter', 'Libero'
+
+  FOREIGN KEY (team_id) REFERENCES teams(team_id)
 );
 
 -- One row per match we played
 CREATE TABLE matches (
   match_id        INT AUTO_INCREMENT PRIMARY KEY,
+  team_id         INT NOT NULL,  -- which of our teams played this match
   opponent        VARCHAR(100) NOT NULL,
   tournament_name VARCHAR(100),
   match_date      DATE NOT NULL,
@@ -35,7 +46,9 @@ CREATE TABLE matches (
 
   -- Sets won by us and by the other team (example: 3-1)
   our_sets        INT NOT NULL DEFAULT 0,
-  opponent_sets   INT NOT NULL DEFAULT 0
+  opponent_sets   INT NOT NULL DEFAULT 0,
+
+  FOREIGN KEY (team_id) REFERENCES teams(team_id)
 );
 
 -- One row per player per match (their stat line for that match)

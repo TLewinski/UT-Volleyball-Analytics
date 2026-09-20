@@ -7,39 +7,44 @@
 
 USE volleyball_analytics;
 
--- Players (ids 1-10, in this order)
-INSERT INTO players (first_name, last_name, position) VALUES
-  ('Tyler', 'Lewinski', 'Opposite Hitter'),
-  ('Luke', 'Fels', 'Outside Hitter'),
-  ('Ryan', 'Post', 'Outside Hitter'),
-  ('Connor', 'Jones', 'Defensive Specialist'),
-  ('Bryden', 'Meyer', 'Setter'),
-  ('Ryan', 'Gruber', 'Defensive Specialist'),
-  ('London', 'Stuller', 'Libero'),
-  ('Josh', 'Gilts', 'Middle Blocker'),
-  ('Colin', 'Jones', 'Middle Blocker'),
-  ('Sam', 'Klein', 'Middle Blocker');
+-- Our teams (ids 1 and 2)
+INSERT INTO teams (name) VALUES
+  ('Toledo A'),
+  ('Toledo B');
 
--- Matches (ids 1-17, in this order)
+-- Players (ids 1-10, in this order). The 1 is the team_id (Toledo A).
+INSERT INTO players (team_id, first_name, last_name, position) VALUES
+  (1, 'Tyler', 'Lewinski', 'Opposite Hitter'),
+  (1, 'Luke', 'Fels', 'Outside Hitter'),
+  (1, 'Ryan', 'Post', 'Outside Hitter'),
+  (1, 'Connor', 'Jones', 'Defensive Specialist'),
+  (1, 'Bryden', 'Meyer', 'Setter'),
+  (1, 'Ryan', 'Gruber', 'Defensive Specialist'),
+  (1, 'London', 'Stuller', 'Libero'),
+  (1, 'Josh', 'Gilts', 'Middle Blocker'),
+  (1, 'Colin', 'Jones', 'Middle Blocker'),
+  (1, 'Sam', 'Klein', 'Middle Blocker');
+
 -- Set scores weren't recorded, so our_sets / opponent_sets stay at 0 for now
-INSERT INTO matches (opponent, tournament_name, match_date, result) VALUES
-  ('Bowling Green', 'GLMVB', '2026-02-07', 'W'),
-  ('Ferris State', 'GLMVB', '2026-02-07', 'W'),
-  ('Davenport', 'GLMVB', '2026-02-07', 'L'),
-  ('Oakland', 'GLMVB', '2026-02-07', 'L'),
-  ('Cincinnati', 'GLMVB', '2026-02-07', 'W'),
-  ('Detroit Mercy', 'GLMVB', '2026-02-08', 'W'),
-  ('Michigan', 'GLMVB', '2026-02-08', 'L'),
-  ('Grand Valley State', 'GLMVB', '2026-02-08', 'W'),
-  ('Hope', 'GLMVB', '2026-02-08', 'W'),
-  ('Western Michigan', 'GLMVB', '2026-02-08', 'L'),
-  ('Central Michigan', 'GLMVB', '2026-02-08', 'W'),
-  ('Bowling Green', 'BG Tournament', '2026-02-28', 'W'),
-  ('Ferris State', 'BG Tournament', '2026-02-28', 'W'),
-  ('Detroit Mercy', 'BG Tournament', '2026-02-28', 'W'),
-  ('Oakland', 'BG Tournament', '2026-02-28', 'L'),
-  ('Wayne State', 'BG Tournament', '2026-02-28', 'W'),
-  ('Eastern Michigan', 'BG Tournament', '2026-02-28', 'W');
+-- Matches (ids 1-17). The 1 is the team_id (Toledo A).
+INSERT INTO matches (team_id, opponent, tournament_name, match_date, result) VALUES
+  (1, 'Bowling Green', 'GLMVB', '2026-02-07', 'W'),
+  (1, 'Ferris State', 'GLMVB', '2026-02-07', 'W'),
+  (1, 'Davenport', 'GLMVB', '2026-02-07', 'L'),
+  (1, 'Oakland', 'GLMVB', '2026-02-07', 'L'),
+  (1, 'Cincinnati', 'GLMVB', '2026-02-07', 'W'),
+  (1, 'Detroit Mercy', 'GLMVB', '2026-02-08', 'W'),
+  (1, 'Michigan', 'GLMVB', '2026-02-08', 'L'),
+  (1, 'Grand Valley State', 'GLMVB', '2026-02-08', 'W'),
+  (1, 'Hope', 'GLMVB', '2026-02-08', 'W'),
+  (1, 'Western Michigan', 'GLMVB', '2026-02-08', 'L'),
+  (1, 'Central Michigan', 'GLMVB', '2026-02-08', 'W'),
+  (1, 'Bowling Green', 'BG Tournament', '2026-02-28', 'W'),
+  (1, 'Ferris State', 'BG Tournament', '2026-02-28', 'W'),
+  (1, 'Detroit Mercy', 'BG Tournament', '2026-02-28', 'W'),
+  (1, 'Oakland', 'BG Tournament', '2026-02-28', 'L'),
+  (1, 'Wayne State', 'BG Tournament', '2026-02-28', 'W'),
+  (1, 'Eastern Michigan', 'BG Tournament', '2026-02-28', 'W');
 
 -- Stat lines: one row per player per match
 -- Columns: player, match, kills, attempts, errors, digs, aces, blocks, missed serves

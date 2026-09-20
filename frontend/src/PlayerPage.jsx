@@ -77,7 +77,9 @@ function PlayerPage() {
       <h1 className="text-3xl font-bold mt-4">{playerName}</h1>
 
       {/* Position under the name (if we have one) */}
-      <p className="text-slate-400 mb-8">{matches.length > 0 && matches[0].position}</p>
+      <p className="text-slate-400 mb-8">
+        {matches.length > 0 && `${matches[0].team_name} · ${matches[0].position}`}
+      </p>
 
       {matches.length === 0 ? (
         <p className="text-slate-400">No stats found for this player.</p>

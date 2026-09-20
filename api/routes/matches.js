@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 
-// Get every match, oldest first
+// Get every match, oldest first. Add ?team=1 to limit it to one team.
 // DATE_FORMAT keeps the date as plain "2025-09-13" text (avoids time zone shifts)
 router.get("/", (req, res) => {
   const sql = `
@@ -15,16 +15,18 @@ router.get("/", (req, res) => {
       our_sets,
       opponent_sets
     FROM matches
+    WHERE (? IS NULL OR team_id = ?)
     ORDER BY match_date ASC
   `;
+  const team = req.query.team || null;
 
-  db.query(sql, (err, results) => {
+  db.query(sql, [team, team], (err, results) => {
     if (err) return res.status(500).json({ error: "Could not load matches" });
     res.json(results);
   });
 });
 
-// Get the team's win/loss record
+// Get the win/loss record. Add ?team=1 for one team's record.
 // Example response: { "wins": 2, "losses": 2 }
 router.get("/record", (req, res) => {
   const sql = `
@@ -32,9 +34,11 @@ router.get("/record", (req, res) => {
       SUM(result = 'W') AS wins,
       SUM(result = 'L') AS losses
     FROM matches
+    WHERE (? IS NULL OR team_id = ?)
   `;
+  const team = req.query.team || null;
 
-  db.query(sql, (err, results) => {
+  db.query(sql, [team, team], (err, results) => {
     if (err) return res.status(500).json({ error: "Could not load record" });
 
     // SUM gives back null when there are no matches, so default to 0
@@ -50,7 +54,11 @@ router.get("/record", (req, res) => {
 // { "opponent": "Ohio State", "tournament_name": "MAC Classic",
 //   "match_date": "2025-10-05", "result": "W", "our_sets": 3, "opponent_sets": 1 }
 router.post("/", (req, res) => {
-  const { opponent, tournament_name, match_date, result, our_sets, opponent_sets } = req.body;
+  const { team_id, opponent, tournament_name, match_date, result, our_sets, opponent_sets } = req.body;
+
+  if (!team_id) {
+    return res.status(400).json({ error: "Team is required" });
+  }
 
   // Basic checks so we don't save a broken match
   if (!opponent || !match_date) {
@@ -61,10 +69,10 @@ router.post("/", (req, res) => {
   }
 
   const sql = `
-    INSERT INTO matches (opponent, tournament_name, match_date, result, our_sets, opponent_sets)
-    VALUES (?, ?, ?, ?, ?, ?)
+    INSERT INTO matches (team_id, opponent, tournament_name, match_date, result, our_sets, opponent_sets)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
   `;
-  const values = [opponent, tournament_name, match_date, result, our_sets || 0, opponent_sets || 0];
+  const values = [team_id, opponent, tournament_name, match_date, result, our_sets || 0, opponent_sets || 0];
 
   db.query(sql, values, (err, results) => {
     if (err) return res.status(500).json({ error: "Could not save match" });

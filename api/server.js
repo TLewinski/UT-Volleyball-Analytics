@@ -13,6 +13,7 @@ app.use(express.json()); // lets us read JSON sent in POST requests
 app.use("/players", require("./routes/players"));
 app.use("/stats", require("./routes/stats"));
 app.use("/matches", require("./routes/matches"));
+app.use("/teams", require("./routes/teams"));
 
 // Simple check that the API is up
 app.get("/", (req, res) => {

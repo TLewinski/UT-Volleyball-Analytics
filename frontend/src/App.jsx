@@ -16,6 +16,10 @@ function StatCard({ label, value }) {
 }
 
 function Home() {
+  // Which team the dashboard is showing (1 = Toledo A)
+  const [teams, setTeams] = useState([]);
+  const [teamId, setTeamId] = useState(1);
+
   const [summary, setSummary] = useState({});
   const [totals, setTotals] = useState([]);
   const [record, setRecord] = useState({ wins: 0, losses: 0 });
@@ -24,13 +28,24 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Load the list of teams once, for the buttons at the top
   useEffect(() => {
+    axios.get(`${API}/teams`).then((res) => setTeams(res.data));
+  }, []);
+
+  // Reload the stats whenever the picked team changes
+  useEffect(() => {
+    setLoading(true);
+
+    // ?team=1 tells the API which team's numbers we want
+    const q = `?team=${teamId}`;
+
     // Fire all requests at once; wait for all of them before showing data
     Promise.all([
-      axios.get(`${API}/stats/summary`),
-      axios.get(`${API}/players/totals`),
-      axios.get(`${API}/matches/record`),
-      axios.get(`${API}/matches`),
+      axios.get(`${API}/stats/summary${q}`),
+      axios.get(`${API}/players/totals${q}`),
+      axios.get(`${API}/matches/record${q}`),
+      axios.get(`${API}/matches${q}`),
     ])
       .then(([summaryRes, totalsRes, recordRes, matchesRes]) => {
         setSummary(summaryRes.data);
@@ -40,7 +55,7 @@ function Home() {
       })
       .catch(() => setError("Could not load data — is the API running?"))
       .finally(() => setLoading(false));
-  }, []);
+  }, [teamId]);
 
   // Re-computed on every render; spread copies the array so we never mutate state
   const sortedTotals = [...totals].sort((a, b) => b[sortField] - a[sortField]);
@@ -81,6 +96,23 @@ function Home() {
         >
           + Add Data
         </Link>
+      </div>
+
+      {/* One button per team — click to switch the whole page */}
+      <div className="flex gap-2 mb-8">
+        {teams.map((team) => (
+          <button
+            key={team.team_id}
+            onClick={() => setTeamId(team.team_id)}
+            className={`px-4 py-2 rounded-lg font-bold ${
+              team.team_id === teamId
+                ? "bg-gold-500 text-navy-950"
+                : "bg-navy-800 text-slate-300 hover:bg-navy-700"
+            }`}
+          >
+            {team.name}
+          </button>
+        ))}
       </div>
 
       {/* Team summary cards */}

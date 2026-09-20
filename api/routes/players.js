@@ -3,14 +3,23 @@ const router = express.Router();
 const db = require("../db");
 
 // Get every player
+// Get every player, or just one team's with ?team=1
 router.get("/", (req, res) => {
-  db.query("SELECT * FROM players ORDER BY last_name", (err, results) => {
+  const sql = `
+    SELECT * FROM players
+    WHERE (? IS NULL OR team_id = ?)
+    ORDER BY last_name
+  `;
+  const team = req.query.team || null;
+
+  db.query(sql, [team, team], (err, results) => {
     if (err) return res.status(500).json({ error: "Could not load players" });
     res.json(results);
   });
 });
 
 // Season totals for each player, plus hitting percentage
+// Add ?team=1 to limit it to one team
 // Hitting % = (kills - errors) / attempts
 // NULLIF(..., 0) turns 0 attempts into NULL so we never divide by zero
 router.get("/totals", (req, res) => {
@@ -27,11 +36,15 @@ router.get("/totals", (req, res) => {
       ROUND((SUM(ps.kills) - SUM(ps.errors)) / NULLIF(SUM(ps.attempts), 0), 3) AS hitting_pct
     FROM players p
     JOIN player_stats ps ON p.player_id = ps.player_id
+    WHERE (? IS NULL OR p.team_id = ?)
     GROUP BY p.player_id
     ORDER BY kills DESC
   `;
 
-  db.query(sql, (err, results) => {
+  // ?team=1 limits this to one team; leaving it off shows everyone
+  const team = req.query.team || null;
+
+  db.query(sql, [team, team], (err, results) => {
     if (err) return res.status(500).json({ error: "Could not load totals" });
     res.json(results);
   });
@@ -46,6 +59,7 @@ router.get("/:id", (req, res) => {
       p.first_name,
       p.last_name,
       p.position,
+      t.name AS team_name,
       m.match_id,
       m.opponent,
       m.tournament_name,
@@ -61,6 +75,7 @@ router.get("/:id", (req, res) => {
     FROM player_stats ps
     JOIN players p ON ps.player_id = p.player_id
     JOIN matches m ON ps.match_id = m.match_id
+    JOIN teams t ON p.team_id = t.team_id
     WHERE p.player_id = ?
     ORDER BY m.match_date ASC
   `;

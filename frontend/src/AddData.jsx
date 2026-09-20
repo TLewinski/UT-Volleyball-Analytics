@@ -8,6 +8,7 @@ const inputClass = "bg-navy-800 rounded-lg p-2 w-full";
 
 // Blank versions of each form, used to start and to reset after saving
 const emptyMatch = {
+  team_id: "",
   opponent: "",
   tournament_name: "",
   match_date: "",
@@ -33,6 +34,7 @@ const statFields = ["kills", "attempts", "errors", "digs", "aces", "blocks", "mi
 
 function AddData() {
   // Lists for the dropdowns
+  const [teams, setTeams] = useState([]);
   const [players, setPlayers] = useState([]);
   const [matches, setMatches] = useState([]);
 
@@ -46,6 +48,7 @@ function AddData() {
 
   // Load players and matches for the dropdowns
   function loadLists() {
+    axios.get(`${API}/teams`).then((res) => setTeams(res.data));
     axios.get(`${API}/players`).then((res) => setPlayers(res.data));
     axios.get(`${API}/matches`).then((res) => setMatches(res.data));
   }
@@ -54,6 +57,12 @@ function AddData() {
   useEffect(() => {
     loadLists();
   }, []);
+
+  // Looks up a team's name from its id, for the player dropdown
+  function teamName(id) {
+    const team = teams.find((t) => t.team_id === id);
+    return team ? team.name : "";
+  }
 
   // Updates one field in the match form when you type
   function handleMatchChange(e) {
@@ -112,6 +121,18 @@ function AddData() {
           <h2 className="text-xl font-bold">New Match</h2>
 
           <label>
+            Our team
+            <select name="team_id" value={matchForm.team_id} onChange={handleMatchChange} className={inputClass} required>
+              <option value="">Pick a team</option>
+              {teams.map((t) => (
+                <option key={t.team_id} value={t.team_id}>
+                  {t.name}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label>
             Opponent
             <input name="opponent" value={matchForm.opponent} onChange={handleMatchChange} className={inputClass} required />
           </label>
@@ -162,7 +183,7 @@ function AddData() {
               <option value="">Pick a player</option>
               {players.map((p) => (
                 <option key={p.player_id} value={p.player_id}>
-                  {p.first_name} {p.last_name}
+                  {p.first_name} {p.last_name} ({teamName(p.team_id)})
                 </option>
               ))}
             </select>
